@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.javaweb.funding.potal.dao.TicketMapper" >
+  <resultMap id="BaseResultMap" type="com.javaweb.funding.bean.Ticket" >
+    <id column="id" property="id" />
+    <result column="ticketid" property="ticketid" />
+    <result column="piid" property="piid" />
+    <result column="STATUS" property="STATUS" />
+    <result column="authcode" property="authcode" />
+    <result column="pstep" property="pstep" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from t_ticket
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="saveTicket" parameterType="com.javaweb.funding.bean.Ticket" >
+    insert into t_ticket (memberid, STATUS, pstep)
+    values (#{memberid}, #{STATUS}, #{pstep})
+  </insert>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select id, loginacct, userpswd, username, email, authstatus, usertype, realname, 
+    cardnum, accttype
+    from t_ticket
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, loginacct, userpswd, username, email, authstatus, usertype, realname, 
+    cardnum, accttype
+    from t_ticket
+  </select>
+  
+  <select id="getTicketByMemberId" resultMap="BaseResultMap" >
+  	select *
+    from t_ticket 
+    where memberid=#{memberid} and STATUS='0'
+  </select>
+  
+  <update id="updatePstep">
+  	update t_ticket set pstep=#{pstep} where memberid=#{memberid} and STATUS='0'
+  </update>
+  
+  <update id="updatePstepAndPiid">
+  	update t_ticket set pstep=#{pstep},authcode=#{authcode},piid=#{piid} where id=#{id}
+  </update>
+  
+  <select id="getMemberByPiid">
+  	select t_member.* from t_member join t_ticket
+  	on t_member.id = ticket.memberid where t_ticket.piid=#{piid}
+  
+  </select>
+  
+</mapper>
